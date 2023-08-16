@@ -1,42 +1,22 @@
 version: '3.3'
 
 services:
-  dbprovident:
-      image: mysql:latest
-      container_name: database-provident
-      restart: always
-      environment:
-        - MYSQL_DATABASE=provident
-        - MYSQL_USER=sistemas
-        - MYSQL_PASSWORD=w0R*SEL9^vp5E7H61E&v6E%zZ
-        - MYSQL_ROOT_PASSWORD=w0R*SEL9^vp5E7H61E&v6E%zZ
-      ports:
-        - 33010:3306
-      volumes:
-        - ./mysql:/var/lib/mysql
-      networks:
-        red_provident:
-          ipv4_address: 192.168.121.115
-      command: --default-authentication-plugin=mysql_native_password --bind-address=0.0.0.0
-  
-  provident:
+  provident_web:
     build: .
-    container_name: provident
+    container_name: provident_page
     restart: always
     deploy:
       resources:
         limits:
           memory: 250M
     ports: 
-      - 6375:6375
+      - 8000:8000
     volumes:
-      - .:/home/provident
-    depends_on:
-      - dbprovident
+      - .:/home/provident_page
     networks:
       red_provident:
         ipv4_address: 192.168.121.20
-    command: uvicorn app.main:app --reload --host '0.0.0.0' --port 6375
+    command: python manage.py runserver 0.0.0.0:8000
 
 
 networks:
